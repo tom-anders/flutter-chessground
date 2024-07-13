@@ -21,6 +21,15 @@ const double _kDragDistanceThreshold = 3.0;
 
 const _kCancelShapesDoubleTapDelay = Duration(milliseconds: 200);
 
+enum InputMethod {
+  clickTwoSquares('Click two squares'),
+  drag('Drag a piece'),
+  either('Either');
+
+  final String label;
+  const InputMethod(this.label);
+}
+
 /// A chessboard widget.
 ///
 /// This widget can be used to display a static board, a dynamic board that
@@ -33,6 +42,7 @@ class Board extends StatefulWidget {
     this.settings = const BoardSettings(),
     this.onMove,
     this.onPremove,
+    this.inputMethod = InputMethod.either,
   });
 
   /// Visal size of the board.
@@ -51,6 +61,8 @@ class Board extends StatefulWidget {
   ///
   /// If the callback is null, the board will not allow premoves.
   final void Function(Move?)? onPremove;
+
+  final InputMethod inputMethod;
 
   double get squareSize => size / 8;
 
@@ -550,6 +562,10 @@ class _BoardState extends State<Board> {
         _premoveDests = null;
       });
     }
+
+    if (widget.inputMethod == InputMethod.drag) {
+      _shouldDeselectOnTapUp = true;
+    }
   }
 
   void _onPointerMove(PointerMoveEvent details) {
@@ -574,7 +590,9 @@ class _BoardState extends State<Board> {
 
     final distance =
         (details.position - _currentPointerDownEvent!.position).distance;
-    if (_dragAvatar == null && distance > _kDragDistanceThreshold) {
+    if (_dragAvatar == null &&
+        distance > _kDragDistanceThreshold &&
+        widget.inputMethod != InputMethod.clickTwoSquares) {
       _onDragStart(_currentPointerDownEvent!);
     }
 

@@ -1,3 +1,7 @@
+## 3.2.0
+
+- Support selecting the `inputMethod`, with possible values: `either` (default), `drag`, or `clickTwoSquares`.
+
 ## 3.1.1
 
 - Allow shapes to be drawn on a non-interactable board.

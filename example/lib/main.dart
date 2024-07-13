@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   ValidMoves validMoves = IMap(const {});
   Side sideToMove = Side.white;
   PieceSet pieceSet = PieceSet.merida;
+  InputMethod inputMethod = InputMethod.either;
   BoardTheme boardTheme = BoardTheme.blue;
   bool drawMode = true;
   bool pieceAnimation = true;
@@ -151,6 +152,7 @@ class _HomePageState extends State<HomePage> {
                   ? _onUserMoveAgainstBot
                   : _onUserMoveFreePlay,
               onPremove: _onSetPremove,
+              inputMethod: inputMethod,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -240,6 +242,29 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ElevatedButton(
+                      child: Text('Input method: ${inputMethod.label}'),
+                      onPressed: () => _showChoicesPicker<InputMethod>(
+                        context,
+                        choices: InputMethod.values,
+                        selectedItem: inputMethod,
+                        labelBuilder: (t) => Text(t.label),
+                        onSelectedItemChanged: (InputMethod? value) {
+                          setState(() {
+                            if (value != null) {
+                              inputMethod = value;
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                   ],
                 ),
                 if (playMode == Mode.freePlay)
